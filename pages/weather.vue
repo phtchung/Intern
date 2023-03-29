@@ -16,7 +16,7 @@
     </div>
 
 
-    <form @submit.prevent="GetInfor">
+    <form @submit.prevent="fetch">
       <div class="form-group" style="margin:60px 100px 20px">
         <label for="exampleInputEmail1"></label>
         <input v-model="place" @blur="displayplace = place" type="text" class="form-control" id="exampleInputEmail1"  placeholder="Enter Place Name">
@@ -39,7 +39,6 @@ export default {
     }
   },
   created() {
-    this.GetInfor()
   },
   computed:{
     icon(){
@@ -56,15 +55,22 @@ export default {
     }
   },
   methods:{
-   GetInfor() {
-     this.$axios
-        .$get(`https://api.openweathermap.org/data/2.5/weather?q=${this.place}&appid=c7993eed6d2f9395400003de88f1dd2f`)
-        .then(res => {
-          this.weather = res
-          console.log(this.weather)
-        })
-
-    }
+    //   GetInfor() {
+    //   this.$axios
+    //     .$get(`https://api.openweathermap.org/data/2.5/weather?q=${this.place}&appid=c7993eed6d2f9395400003de88f1dd2f`)
+    //     .then(res => {
+    //       this.weather = res
+    //       console.log(this.weather)
+    //     })
+    // },
+    //   async asyncData(){
+    //     this.weather = await this.$axios.$get(`https://api.openweathermap.org/data/2.5/weather?q=${this.place}&appid=c7993eed6d2f9395400003de88f1dd2f`)
+    //     console.log(this.weather)
+    //   },
+      async fetch(){
+        this.weather = await this.$axios.$get(`https://api.openweathermap.org/data/2.5/weather?q=${this.place}&appid=c7993eed6d2f9395400003de88f1dd2f`)
+        console.log(this.weather)
+      }
   }
 }
 </script>
