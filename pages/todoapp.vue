@@ -88,24 +88,6 @@
     </div>
 
 
-    <!-- The Modal -->
-<!--    <div class="modal fade " id="1myModal">-->
-<!--      <div class="modal-dialog modal-dialog-centered">-->
-<!--        <div class="modal-content">-->
-<!--          <div class="modal-header">-->
-<!--            <h5 class="modal-title">Xóa</h5>-->
-<!--            <button type="button" class="btn-close" data-bs-dismiss="modal"  >&times;</button>-->
-<!--          </div>-->
-<!--          <div class="modal-body">-->
-<!--            <p>Bạn có chắc chắn muốn xóa không ?</p>-->
-<!--          </div>-->
-<!--          <div class="modal-footer">-->
-<!--            <button type="button" data-bs-dismiss="modal" class="btn btn-secondary" >Đóng</button>-->
-<!--            <button type="button" data-bs-dismiss="modal" class="btn btn-success">Xóa</button>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </div>-->
   </div>
 </template>
 
@@ -122,11 +104,7 @@ export default {
       selected:null,
       newtaskname:"",
       todos:[
-        // {
-        //   // id:1,
-        //   // taskname:"task1",
-        //   // status:"To-do",
-        // },
+
       ],
     }
   },
