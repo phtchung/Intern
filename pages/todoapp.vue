@@ -8,7 +8,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" data-bs-dismiss="modal" @click="hideModal" class="btn btn-secondary" >Đóng</button>
-          <button type="button" data-bs-dismiss="modal"  @click="DelhideModal"  class="btn btn-success">Xóa</button>
+          <button type="button" data-bs-dismiss="modal"  @click="removeFromArr"  class="btn btn-success">Xóa</button>
         </div>
       </b-modal>
     </div>
@@ -45,7 +45,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" data-bs-dismiss="modal" @click="hideModal1" class="btn btn-secondary" >Đóng</button>
-          <button type="button" data-bs-dismiss="modal"  @click="fixHindModal"  class="btn btn-danger">Sửa</button>
+          <button type="button" data-bs-dismiss="modal"  @click="updateArr"  class="btn btn-danger">Sửa</button>
         </div>
       </b-modal>
     </div>
@@ -81,7 +81,7 @@
           </b-row>
         </div>
         <div class="modal-footer">
-          <button type="button" data-bs-dismiss="modal" @click="AddhideModal2" class="btn btn-danger" >Thêm</button>
+          <button type="button" data-bs-dismiss="modal" @click="addToArr" class="btn btn-danger" >Thêm</button>
 
         </div>
       </b-modal>
@@ -127,6 +127,8 @@
 </template>
 
 <script>
+
+
 export default {
   name: "todoapp",
   components:{
@@ -147,20 +149,19 @@ export default {
   },
   created(){
     this.storage();
+
+  },
+  computed:{
+    todoItems() {
+      return this.$store.getters.todoItems
+    }
   },
 
   methods:{
     storage(){
-      if (process.browser)
-      this.todos = JSON.parse(localStorage.getItem("array") || "[]")
+      this.$store.commit('setArr',this.todos)
       this.searchData = this.todos
       this.length = this.todos.length
-    },
-
-    addTask(task){
-      this.todos.push({id:this.todos.length+1 ,taskname: task , status: "To-do"})
-      console.log(this.todos)
-      localStorage.setItem("array",JSON.stringify(this.todos))
     },
     getId(ID){
       this.current_id = ID
@@ -179,8 +180,8 @@ export default {
       localStorage.setItem("array",JSON.stringify(this.todos))
       this.searchData = this.todos
       this.$refs['my-modal'].hide()
-
     },
+
     showModal1() {
       this.$refs['my-modal1'].show()
     },
@@ -202,6 +203,18 @@ export default {
       this.selected=null
       this.length+=1;
     },
+    addToArr(){
+      const temp = {id:this.length+1 ,taskname: this.newtaskname , status: this.selected}
+      //lưu vào store
+      this.$store.commit('addArr',temp)
+      // gán mảng mới cho search để còn tìm
+      this.searchData = this.todoItems
+      console.log(this.searchData)
+      this.$refs['my-modal2'].hide()
+      this.newtaskname ='';
+      this.selected=null
+      this.length+=1;
+    },
     fixHindModal(){
       const id = parseInt(localStorage.getItem('id'))
       for(let i = 0 ; i < this.todos.length ; i++){
@@ -217,6 +230,22 @@ export default {
       this.selected = null;
       this.newtaskname="";
     },
+    updateArr(){
+      const id = parseInt(localStorage.getItem('id'))
+      const temp = {id:id,taskname: this.newtaskname , status: this.selected}
+      //truyền vào bên store để update
+      this.$store.commit('updateArr',temp)
+      this.searchData = this.todoItems
+      this.$refs['my-modal1'].hide()
+      this.selected = null;
+      this.newtaskname="";
+    },
+    removeFromArr(){
+      const id = parseInt(localStorage.getItem('id'))
+      this.$store.commit('removeFromArr',id)
+      this.searchData = this.todoItems
+      this.$refs['my-modal'].hide()
+    },
     updateTable() {
       this.searchData = this.searchTable(this.search);
     },
@@ -224,9 +253,7 @@ export default {
        return this.todos.filter(row => {
           return row['taskname'].toLowerCase().includes(query.toLowerCase())
        });
-
 },
-
   },
 }
 </script>
