@@ -35,9 +35,9 @@
                   <b-form-select-option :value="null" disabled>--Chọn trạng thái task --</b-form-select-option>
                 </template>
                 <!-- These options will appear after the ones from 'options' prop -->
-                <b-form-select-option value="To-do">To-do</b-form-select-option>
-                <b-form-select-option value="Finished">Finished</b-form-select-option>
-                <b-form-select-option value="Review">Review</b-form-select-option>
+                <b-form-select-option value="New">New</b-form-select-option>
+                <b-form-select-option value="Inprogress">Inprogress</b-form-select-option>
+                <b-form-select-option value="Done">Done</b-form-select-option>
               </b-form-select>
             </b-col>
           </b-row>
@@ -58,7 +58,7 @@
               <label style="padding: 0" >Task name :</label>
             </b-col>
             <b-col sm="9">
-              <b-form-input id="input-default" v-model="newtaskname" placeholder="Enter new name"></b-form-input>
+              <b-form-input id="input-default" v-model="newtaskname"   aria-describedby="input-live-help input-live-feedback"  :state="nameState" placeholder="Enter new name"></b-form-input>
             </b-col>
           </b-row>
 
@@ -70,18 +70,29 @@
               <b-form-select v-model="selected"  >
                 <!-- This slot appears above the options from 'options' prop -->
                 <template #first>
-                  <b-form-select-option :value="null" disabled>--Chọn trạng thái task --</b-form-select-option>
+                  <b-form-select-option :value="null" disabled>-- Choose status --</b-form-select-option>
                 </template>
                 <!-- These options will appear after the ones from 'options' prop -->
-                <b-form-select-option value="To-do">To-do</b-form-select-option>
-                <b-form-select-option value="Finished">Finished</b-form-select-option>
-                <b-form-select-option value="Review">Review</b-form-select-option>
+                <b-form-select-option value="New">New</b-form-select-option>
+                <b-form-select-option value="Inprogress">Inprogress</b-form-select-option>
+                <b-form-select-option value="Done">Done</b-form-select-option>
               </b-form-select>
+            </b-col>
+          </b-row>
+
+          <b-row class="my-1 align-items-center">
+            <b-col sm="3">
+              <label style="padding: 0" >Description </label>
+            </b-col>
+            <b-col sm="9">
+              <b-form-input  v-model="description" placeholder="Enter description" ></b-form-input>
             </b-col>
           </b-row>
         </div>
         <div class="modal-footer">
-          <button type="button" data-bs-dismiss="modal" @click="addToArr" class="btn btn-danger" >Thêm</button>
+          <button v-if="nameState === false" type="button" data-bs-dismiss="modal" @click="Refuse" class="btn btn-danger" >Thêm</button>
+
+          <button v-if="nameState === true" type="button" data-bs-dismiss="modal" @click="addToArr" class="btn btn-danger" >Thêm</button>
 
         </div>
       </b-modal>
@@ -114,7 +125,7 @@
         <tbody>
         <tr v-for="(todo,index) in searchData" :key="index">
           <th class="text-center" scope="row">{{index+1}}</th>
-          <td v-if="todo.status === 'Finished'" style="text-decoration: line-through"> {{todo.taskname}}</td>
+          <td v-if="todo.status === 'Done'" style="text-decoration: line-through"> {{todo.taskname}}</td>
           <td v-else bgcolor="#db7093" >{{todo.taskname}}</td>
           <td class="text-center">{{todo.status}}</td>
           <td @click="current_id = getId(todo.id)"><button  class="btn btn-success" @click="showModal">Xóa</button></td>
@@ -137,6 +148,7 @@ export default {
   data(){
     return{
       newtask:"",
+      description:'',
       current_id:0,
       selected:null,
       newtaskname:"",
@@ -154,6 +166,10 @@ export default {
   computed:{
     todoItems() {
       return this.$store.getters.todoItems
+    },
+    nameState() {
+      return !this.containsSpecialCharacters(this.newtaskname)
+
     }
   },
 
@@ -163,6 +179,16 @@ export default {
       this.searchData = this.todos
       this.length = this.todos.length
     },
+    containsSpecialCharacters(str){
+  // Define a regular expression to match special characters
+      const regex = /[^\w\s]/gi;
+
+  // Return true if the character matches the regular expression, false otherwise
+      if(str.length === 0){
+        return true
+      }else return regex.test(str);
+
+},
     getId(ID){
       this.current_id = ID
       console.log(this.current_id)
@@ -214,6 +240,14 @@ export default {
       this.newtaskname ='';
       this.selected=null
       this.length+=1;
+    },
+    Refuse(){
+
+      this.$bvToast.toast(`Task name not valid`, {
+        title: 'Invalid Input',
+        autoHideDelay: 5000,
+
+      })
     },
     fixHindModal(){
       const id = parseInt(localStorage.getItem('id'))
