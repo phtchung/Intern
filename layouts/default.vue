@@ -17,8 +17,8 @@
           <a class="navbar-brand">Weather-App</a>
         </nuxt-link>
 
-        <nuxt-link to="/todoapp">
-          <a class="navbar-brand">Todo App</a>
+        <nuxt-link to="/vi/todoapp">
+          Todo App
         </nuxt-link>
 
         <form class="form-inline">
