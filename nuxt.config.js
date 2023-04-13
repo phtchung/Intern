@@ -1,5 +1,4 @@
 
-
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -23,7 +22,7 @@ export default {
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [
+  plugins: ['~/plugins/vue-tooltip.js'
   ],
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -37,11 +36,37 @@ export default {
     // https://go.nuxtjs.dev/bootstrap
     '@nuxtjs/axios',
     'bootstrap-vue/nuxt',
+    '@nuxtjs/i18n',
   ],axios: {
     // Cấu hình các tùy chọn của axios
+  },i18n: {
+    /* module options */
+    locales: [
+      {
+        code: 'en',
+        iso: 'en',
+        name: 'English',
+        file:"en.json",
+      },
+      {
+        code: 'vi',
+        iso: 'vi',
+        name: 'Tiếng Việt',
+        file:"vi.json",
+
+      }
+    ],
+    defaultLocale: 'en',
+    vueI18n: {
+      fallbackLocale: 'en'
+    },
+    strategy: 'prefix_except_default',
+    lazy: true,
+    langDir: 'locales'
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    transpile: ['vue-tooltip']
   }
 }
