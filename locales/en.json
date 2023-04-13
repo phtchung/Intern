@@ -1,0 +1,10 @@
+{
+  "app_name": "Todo App",
+  "add_btn": "Add Task",
+  "table_col_one": "Task No",
+  "table_col_two": "Task Name",
+  "table_col_three": "Status",
+  "search_tab": "Search"
+
+
+}
