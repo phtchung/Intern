@@ -19,12 +19,13 @@ const store = () => {
           state.todoarr.splice(index, 1, todo)
         }
       },
-      removeFromArr(state, id) {
+      removeFromArr(state, id){
         const index = state.todoarr.findIndex(item => item.id === id);
         if (index !== -1) {
           state.todoarr.splice(index, 1);
         }
       },
+
     },
     actions: {
       // setArr(context, arr) {
@@ -43,7 +44,8 @@ const store = () => {
     getters: {
       todoItems: (state) => {
         return state.todoarr
-      }
+      },
+
     },
   })
 }
