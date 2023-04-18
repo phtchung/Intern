@@ -31,16 +31,13 @@
         },
        mounted() {
         this.$watch('language', (newValue, oldValue) => {
-          console.log(oldValue)
-          console.log(newValue)
+          // console.log(oldValue)
+          // console.log(newValue)
           // this.$i18n.locale = newValue
-          console.log('local mới '+this.$i18n.locale)
+          // console.log('local mới '+this.$i18n.locale)
           this.$emit('inputData', newValue);
         })
        },
-        created(){
-          console.log(this.locales)
-          console.log(this.locale)
-        }
+
     }
 </script>
