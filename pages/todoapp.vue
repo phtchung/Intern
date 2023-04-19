@@ -71,9 +71,19 @@
             <b-col sm="3">
               <label style="padding: 0" >Task name :</label>
             </b-col>
-            <b-col sm="9">
-              <b-form-input id="input-default" v-model="newtaskname"  aria-describedby="input-live-help input-live-feedback"  :state="nameState" placeholder="Enter new name"></b-form-input>
+            <b-col sm="9" >
+              <div class="form-group" :class="{ 'form-group--error': $v.newtaskname.required }">
+<!--                <input class="form__input" v-model.trim="$v.newtaskname.$model" />-->
+                <b-form-input id="input-default" v-model.trim="$v.newtaskname.$model"  aria-describedby="input-live-help input-live-feedback"   placeholder="Enter new name"></b-form-input>
+              </div>
+
+              <!-- <div class="error" v-if="!$v.newtaskname.minLength">Name must have at least {{$v.newtaskname.$params.minLength.min}} letters.</div> -->
+              <!-- <b-form-input id="input-default" v-model.trim="$v.newtaskname.$model"  aria-describedby="input-live-help input-live-feedback"   placeholder="Enter new name"></b-form-input>
+              <div v-if="!$v.newtaskname.$error">Please enter a valid new task name.</div>
+              <div class="error" v-if="!$v.newtaskname.minLength">Name must have at least {{$v.newtaskname.$params.minLength.min}} letters.</div> -->
             </b-col>
+            <div class="error" v-if="!$v.newtaskname.required">Field is required</div>
+            <div class="error" v-else-if="!$v.newtaskname.containsSpecialCharacters">Chứa kí tự đặc biệt</div>
           </b-row>
 
           <b-row class="my-1 align-items-center">
@@ -111,11 +121,13 @@
     </div>
 
     <h3 class="text-center mb-4">{{$t("app_name")}}</h3>
-    <SwitchLanguage @inputData = "updatelanguage"/>
 
     <div style="max-width: 700px;margin: 0 auto">
-      <div class="row" >
-        <button  class="btn btn-success" @click="showModal2(1)">{{$t("add_btn")}}</button>
+      <div class="m-0">
+        <SwitchLanguage class="row justify-content-end position-relative "  @inputData = "updatelanguage"/>
+      </div>
+      <div class="row justify-content-center align-content-between" >
+        <button  class="btn btn-success text-center" @click="showModal2(1)">{{$t("add_btn")}}</button>
       </div>
     </div>
 
@@ -153,6 +165,9 @@
 
 <script>
 import SwitchLanguage from '../components/SwitchLanguage.vue'
+import { required, regex } from 'vuelidate/lib/validators'
+
+
 
 export default {
   name: "todoapp",
@@ -170,6 +185,7 @@ export default {
       newtaskname:"",
       length:null,
       search:'',
+      errors:false,
       searchData:[],
       todos:[
       ],
@@ -180,6 +196,18 @@ export default {
         { item: 'Done', name: 'Done' },
       ]
     }
+  },
+  validations:{
+    newtaskname: {
+      required,
+      containsSpecialCharacters(str){
+        const regex = /[^\w\s]/gi;
+        if(str.length === 0){
+          return false
+        }else return !regex.test(str);
+      }
+     },
+
   },
   created(){
     this.storage();
@@ -210,9 +238,9 @@ export default {
   },
 
   methods:{
-    updatelanguage(langu){
-      this.$i18n.locale = langu
-      console.log(langu)
+    updatelanguage(language){
+      this.$i18n.locale = language
+      console.log(language)
     },
     storage(){
       this.$store.commit('setArr',this.todos)
@@ -220,10 +248,7 @@ export default {
       this.length = this.todos.length
     },
     containsSpecialCharacters(str){
-  // Define a regular expression to match special characters
       const regex = /[^\w\s]/gi;
-
-
       if(str.length === 0){
         return true
       }else return regex.test(str);
@@ -358,4 +383,19 @@ export default {
 /*b-form-input >>> form-control.is-valid:focus{*/
 /*  background-image: none;*/
 /*}*/
+.form-group--error{
+  animation-name: shakeError;
+  animation-fill-mode: forwards;
+  animation-duration: .6s;
+  animation-timing-function: ease-in-out;
+}
+.error{
+  color: #f57f6c;
+  font-size: .75rem;
+  line-height: 1;
+  display: block;
+  margin-left: 138px;
+  margin-top: -0.675rem;
+  margin-bottom: 0.7175rem;
+}
 </style>
